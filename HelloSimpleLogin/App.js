@@ -20,12 +20,36 @@ export default class App extends Component {
     this.updatePwd = this.updatePwd.bind(this);//需要綁定后下方48行才能直接調用this.updatePwd
   }
   updateNum(nextText) {
-   this.setState((state) => {
+   this.setState((oldState) => {
+     //遍历还没有改变的当前说有的状态机变量
+     for(var aName in oldState){
+       console.log(aName);
+       console.log(oldState[aName]);
+     }
+     //以下定义了如何改变状态机变量
       return {
         inputedNum: nextText,
+        //要求加入一个新的状态机变量aBrandnewStateVariable，setState函数将传入的返回值与当前状态机变量做合并操作。
+        aBrandnewStateVariable: 'I am a new variable.'
       };
-    });
+    },this.changeNumDone);//可设置可选参数：回调函数，它将在“setState完成并且重新渲染完成”后被调用
   }
+
+  /**
+   * 当RN确定重新渲染组件时，会调用该函数，return false：放弃渲染组件
+   */
+  shouldComponentUpdate(){
+    if(this.state.inputedNum<3) return false;
+    return true;
+  }
+
+  /**
+   * setState的回调函数
+   */
+  changeNumDone(){
+    console.log('React Native has changed inputed Num');
+  }
+
   updatePwd(nextText) {
     this.setState(() => {
       return {
