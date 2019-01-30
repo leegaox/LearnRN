@@ -1,16 +1,16 @@
 /**
- *
+ * 登陆页面组件
  * @format
  * @flow
  */
 
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Dimensions, PixelRatio, TextInput } from 'react-native';
+import {Alert, Platform, StyleSheet, Text, View, Dimensions, PixelRatio, TextInput } from 'react-native';
 
 const { height, width } = Dimensions.get("window");
 const pixelRatio = PixelRatio.get();
 let widthOfMargin = width * 0.03;
-export default class App extends Component {
+export default class LoginLeaf extends Component {
   /**
    * 组件构造函数，当该组件被初始化时被调用，通常在构造函数中初始化状态机变量，第一句是固定的
    * @param {*属性} props 
@@ -23,6 +23,7 @@ export default class App extends Component {
     };
 
     this.updatePwd = this.updatePwd.bind(this);//需要綁定后下方122行才能直接調用this.updatePwd
+    this.jumpToWaiting =this.jumpToWaiting.bind(this);
   }
 
   /**
@@ -120,10 +121,44 @@ export default class App extends Component {
         <TextInput style={styles.textInputStyle} placeholder={'请输入手机号'} onChangeText={(newText) => this.updateNum3(newText)} />
         <Text style={styles.textPromptStyle}>您输入的手机号：{this.state.inputedNum}</Text>
         <TextInput style={styles.textInputStyle} placeholder={'请输入密码'} secureTextEntry={true} onChangeText={this.updatePwd} />
-        <Text style={styles.tbigTextPromt}>确定</Text>
+        <Text style={styles.bigTextPromt} onPress={() => this.userPressConfirm()} >确定</Text>
+        <Text style={styles.smallTextPromt} onPress={() => this.userPressAddressBook()} >通讯录</Text>
       </View>
     );//这个反大括号标识render函数的唯一一条语句即 return 语句的结束
   }//这个反大括号标识render函数定义的结束
+
+
+  
+  /**
+   * 调用onLoginPressed属性，该属性是一个回调函数，它会导致在@class NaviModule 中定义的函数@method NaviModule.onLoginPressed 函数被执行，用户输入的号码与密码昨晚参数被传递。
+   */
+userPressConfirm(){
+  Alert.alert(
+    '提示',
+    '确定使用'+this.state.inputedNum+'号码登陆吗?',
+    [
+      {text:'取消',onPress: ()=>{},style:'cancel'},    //按下取消键无操作；设置style：cancel  ios平台下该选项会被排列到最下方，Android平台下没用任何左右；
+      {text:'确定',onPress:this.jumpToWaiting}
+    ],
+    {cancelable:false,onDismiss:()=>{console.log('alert on dismiss')}}//禁止用户通过点击屏幕上非Alert窗口区域让Alert消失这种行为;onDismiss在窗口消失时回调。
+
+  )
+
+}
+
+jumpToWaiting(){
+  console.log('jumpToWaiting.');
+  this.props.onLoginPressed(this.state.inputedNum,this.state.inputedPwd);
+}
+
+/**
+ * TODO...
+ * 跳转通讯录选择号码，后续实现
+ */
+userPressAddressBook(){
+
+}
+
 }//这个反大括号标识了LearnRN类定义的结束
 
 /**
@@ -135,7 +170,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white'
   },
   textInputStyle: {
-    // height:56,//ios平台 TextInput需要指定高度才能显示出来 *
+    height: Platform.OS === "ios" ? 56 : undefined,//ios平台 TextInput需要指定高度才能显示出来 *
     margin: widthOfMargin,
     fontSize: 20,
     backgroundColor: 'gray'
@@ -144,12 +179,17 @@ const styles = StyleSheet.create({
     fontSize: 20,
     margin: widthOfMargin
   },
-  tbigTextPromt: {
+  bigTextPromt: {
     height: 48,
     margin: widthOfMargin,
     backgroundColor: 'gray',
     color: 'white',
     textAlign: 'center',
     fontSize: 28
+  },
+  smallTextPromt: {
+    margin:widthOfMargin,
+    fontSize: 18,
+    textAlign:'right'
   }
 });
