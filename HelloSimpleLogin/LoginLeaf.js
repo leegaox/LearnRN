@@ -5,7 +5,7 @@
  */
 
 import React, { Component } from 'react';
-import {Alert, Platform, StyleSheet, Text, View, Dimensions, PixelRatio, TextInput } from 'react-native';
+import { PermissionsAndroid,Alert, Platform, StyleSheet, Text, View, Dimensions, PixelRatio, TextInput } from 'react-native';
 
 const { height, width } = Dimensions.get("window");
 const pixelRatio = PixelRatio.get();
@@ -23,7 +23,7 @@ export default class LoginLeaf extends Component {
     };
 
     this.updatePwd = this.updatePwd.bind(this);//需要綁定后下方122行才能直接調用this.updatePwd
-    this.jumpToWaiting =this.jumpToWaiting.bind(this);
+    this.jumpToWaiting = this.jumpToWaiting.bind(this);
   }
 
   /**
@@ -122,42 +122,106 @@ export default class LoginLeaf extends Component {
         <Text style={styles.textPromptStyle}>您输入的手机号：{this.state.inputedNum}</Text>
         <TextInput style={styles.textInputStyle} placeholder={'请输入密码'} secureTextEntry={true} onChangeText={this.updatePwd} />
         <Text style={styles.bigTextPromt} onPress={() => this.userPressConfirm()} >确定</Text>
-        <Text style={styles.smallTextPromt} onPress={() => this.userPressAddressBook()} >通讯录</Text>
+        <Text style={styles.smallTextPromt} onPress={() => this.checkPermission(PermissionsAndroid.PERMISSIONS.READ_CONTACTS)} >通讯录</Text>
       </View>
     );//这个反大括号标识render函数的唯一一条语句即 return 语句的结束
   }//这个反大括号标识render函数定义的结束
 
 
-  
+
   /**
    * 调用onLoginPressed属性，该属性是一个回调函数，它会导致在@class NaviModule 中定义的函数@method NaviModule.onLoginPressed 函数被执行，用户输入的号码与密码昨晚参数被传递。
    */
-userPressConfirm(){
-  Alert.alert(
-    '提示',
-    '确定使用'+this.state.inputedNum+'号码登陆吗?',
-    [
-      {text:'取消',onPress: ()=>{},style:'cancel'},    //按下取消键无操作；设置style：cancel  ios平台下该选项会被排列到最下方，Android平台下没用任何左右；
-      {text:'确定',onPress:this.jumpToWaiting}
-    ],
-    {cancelable:false,onDismiss:()=>{console.log('alert on dismiss')}}//禁止用户通过点击屏幕上非Alert窗口区域让Alert消失这种行为;onDismiss在窗口消失时回调。
+  userPressConfirm() {
+    Alert.alert(
+      '提示',
+      '确定使用' + this.state.inputedNum + '号码登陆吗?',
+      [
+        { text: '取消', onPress: () => { }, style: 'cancel' },    //按下取消键无操作；设置style：cancel  ios平台下该选项会被排列到最下方，Android平台下没用任何左右；
+        { text: '确定', onPress: this.jumpToWaiting }
+      ],
+      { cancelable: false, onDismiss: () => { console.log('alert on dismiss') } }//禁止用户通过点击屏幕上非Alert窗口区域让Alert消失这种行为;onDismiss在窗口消失时回调。
 
-  )
+    )
 
-}
+  }
 
-jumpToWaiting(){
-  console.log('jumpToWaiting.');
-  this.props.onLoginPressed(this.state.inputedNum,this.state.inputedPwd);
-}
+  jumpToWaiting() {
+    console.log('jumpToWaiting.');
+    this.props.onLoginPressed(this.state.inputedNum, this.state.inputedPwd);
+  }
 
-/**
- * TODO...
- * 跳转通讯录选择号码，后续实现
- */
-userPressAddressBook(){
+  /**
+   * TODO...
+   * 跳转通讯录选择号码，后续实现
+   */
+  checkPermission(permission) {
+    PermissionsAndroid.check(permission).then(
+      (result) => {
+        console.log('the checkPermission result is: ' + result);
+        if (result) {
+          //执行操作
+          this.userPressAddressBook();
+          return;
+        }
+        PermissionsAndroid.request(permission, {
+          'title': '权限申请',
+          'message': '读取手机联系人。'
+        }).then(
+          (result) => {
+            console.log('the request permission result is: ' + result);
+            if (result === PermissionsAndroid.RESULTS.GRANTED) this.userPressAddressBook();
+            else {//没有授予权限，分情况处理
+              if (result === PermissionsAndroid.RESULTS.DENIED) {
+                  console.log('user denied.');
+              }else {
+                console.log('never ask again.');
+              }
+            }
+          }
+        ).cahtch(
+          (error) => {
+            console.log('error occurs while check permission.');
+            console.log(error);
+          }
+        );
+      }
+    )
 
-}
+
+  }
+
+  userPressAddressBook() {
+    //监听原生消息,使用Promis机制无需设置监听函数
+    //  DeviceEventEmitter.addListener('AndroidToRNMessage',this.handleAndroidMessage.bind(this));
+    var { NativeModules } = require('react-native');
+    let ExampleInterface = NativeModules.ExampleInterface;
+    NativeModules.ExampleInterface.HandleMessage('testMessage').then(
+      (result) => {
+        console.log('quexitao');
+        console.log(result);
+        let obj = JSON.parse(result);
+        //将用户选择的号码显示在RN界面上
+        this.setState({ inputedNum: obj.peerNumber });
+      }
+    ).catch(
+      (error) => {
+        //打印异常信息
+        console.log(error);
+        //打印Android的异常信息
+        console.log(error.message);
+        //打印自己提供的异常信息
+        console.log(error.code);
+      }
+    );
+  }
+
+  handleAndroidMessage(aMessage) {
+    console.log('handleAndroidMessage:' + aMessage);
+    let obj = JSON.parse(aMessage);
+    //将用户选择的号码显示在RN界面上
+    this.setState({ inputedNum: obj.peerNumber });
+  }
 
 }//这个反大括号标识了LearnRN类定义的结束
 
@@ -188,8 +252,8 @@ const styles = StyleSheet.create({
     fontSize: 28
   },
   smallTextPromt: {
-    margin:widthOfMargin,
+    margin: widthOfMargin,
     fontSize: 18,
-    textAlign:'right'
+    textAlign: 'right'
   }
 });
