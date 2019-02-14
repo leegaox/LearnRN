@@ -31,15 +31,15 @@ export default class WaitingLeaf extends Component {
 
 }
 
-WaitingLeaf.propTypes={
+WaitingLeaf.prop={
   phoneNumber:PropTypes.string,
   userPW:PropTypes.string 
 };
 
-// WaitingLeaf.defaultProps={
-//   phoneNumber:'123456',
-//   userPW: '654321'
-// };
+WaitingLeaf.defaultProps={
+  phoneNumber:'123456',
+  userPW: '654321'
+};
 
 
 const styles = StyleSheet.create({

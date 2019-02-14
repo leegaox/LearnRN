@@ -19,7 +19,7 @@ import static android.app.Activity.RESULT_OK;
 
 /**
  * @author Lee
- * @Title: {与React Nativve通信接口}
+ * @Title: {与React Native通信接口,原生代码模块不应该假设自己会在什么线程中执行，应该自己开一个线程执行}
  * @Description:{描述}
  * @date 2019/1/30
  */
@@ -33,7 +33,7 @@ public class ExampleInterface extends ReactContextBaseJavaModule {
         public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
             if (requestCode != 1 || resultCode != RESULT_OK) {
                 return;
-            }
+              }
             Uri contractData = data.getData();
             Cursor cursor = activity.managedQuery(contractData, null, null, null, null);
             cursor.moveToFirst();
@@ -76,7 +76,7 @@ public class ExampleInterface extends ReactContextBaseJavaModule {
 //        aContext.startActivity(intent);
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType(ContactsContract.Contacts.CONTENT_TYPE);
-        //这个Bundle没有用，单必须要有
+        //这个Bundle没有用，但必须要有
         Bundle b = new Bundle();
         //调用系统提供的选择联系人界面
         aContext.startActivityForResult(intent, 1, b);
@@ -88,14 +88,14 @@ public class ExampleInterface extends ReactContextBaseJavaModule {
         interfacePromise=aPromise;
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType(ContactsContract.Contacts.CONTENT_TYPE);
-        //这个Bundle没有用，单必须要有
+        //这个Bundle没有用，但必须要有
         Bundle b = new Bundle();
         //调用系统提供的选择联系人界面
         aContext.startActivityForResult(intent, 1, b);
     }
 
     /**
-     * 用于想React Native侧发送消息
+     * 用于向React Native侧发送消息
      *
      * @param aMessage
      */
