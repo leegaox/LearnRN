@@ -231,7 +231,8 @@ export default class LoginLeaf extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white'
+    backgroundColor: 'white',
+    justifyContent: 'center'
   },
   textInputStyle: {
     height: Platform.OS === "ios" ? 56 : undefined,//ios平台 TextInput需要指定高度才能显示出来 *
