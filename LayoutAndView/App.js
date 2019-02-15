@@ -8,8 +8,8 @@
  */
 
 import React, {Component} from 'react';
-import {PixelRatio,AppRegistry, StyleSheet, Text, View,Image,TextInput,TouchableNativeFeedback,TouchableOpacity,TouchableHighlight} from 'react-native';
-
+import {PixelRatio,AppRegistry,StatusBar, StyleSheet, Text, View,Image,TextInput,TouchableNativeFeedback,TouchableOpacity,TouchableHighlight} from 'react-native';
+import AutoExpandingTextInput from './AutoExpandingTextInput';  
 let pixelRatio = require('PixelRatio').get();
 
 var imageAddress='http://www.zt5.com/uploadfile/2019/0127/20190127010113674.jpg';
@@ -17,13 +17,52 @@ var imageAddress='http://www.zt5.com/uploadfile/2019/0127/20190127010113674.jpg'
 //加载Android项目资源图片（drawable目录）
 let nativeImageSource=require('nativeImageSource');
 
+
 export default class App extends Component{
+
+  _onChange(event) {
+    var text =event.nativeEvent.text;
+    console.log('input text:'+text);
+  }
+
+  _onContentSizeChange =(event)=>{
+    var height=event.nativeEvent.contentSize.height;
+    console.log('TextInput height:'+height);
+  }
 
   constructor(props){
     super(props);
     this.state ={bigButtonPointerEvents:null};
     this.onBigButtonPressed =this.onBigButtonPressed.bind(this);
     this.onSmallButtonPressed =this.onSmallButtonPressed.bind(this);
+    this.tempfunc =this.tempfunc.bind(this);
+  }
+
+  componentDidMount(){
+    var aref =this.tempfunc.bind(this);
+    //在componentDidMount执行完后可以获取组件位置信息，因此指定一个1毫秒超时定时器。
+    window.setTimeout(this.tempfunc,3);
+  }
+
+    /**
+   * 通过引用修复TextInput的属性值,获取组件位置信息
+   */
+  tempfunc(){
+    this.refs.mRef.setNativeProps({placeholder:'12345',multiline:true, numberOfLines:3,style:{backgroundColor:'red'}});
+    this.refs.mRef.measure(this.getTextInputPosition);
+  }
+
+  /**
+   * 获取位置信息
+   */
+  getTextInputPosition(fx,fy,width,height,px,py){
+    console.log('getTextInputPosition');
+    console.log('Component width is: '+width);
+    console.log('Component height is: '+height);
+    console.log('X offset to frame:'+fx);
+    console.log('Y offset to frame:'+fy);
+    console.log('X offset to page:'+px);
+    console.log('Y offset to page:'+py);
   }
 
   onBigButtonPressed(){
@@ -39,8 +78,9 @@ export default class App extends Component{
     console.log('big button will responed.');
     this.setState({bigButtonPointerEvents:null});//改变状态机变量
   }
+
   onPressButton(){
-      
+     
   }
   
   render() {
@@ -50,9 +90,10 @@ export default class App extends Component{
       width:60,height:60
     };
 
- 
     return (
       <View style={styles.container}>
+        {/* 状态栏 */}
+        <StatusBar animated={true} hidden ={false} backgroundColor={'black'} translucent={true} barStyle={'default'} showHideTransition={'fade'} networkActivityIndicatorVisible={true}/>
         <Text style={styles.sButtonStyle} onPress={this.onSmallButtonPressed}>Small Button</Text>
         <Text style={styles.bButtonStyle} onPress={this.onBigButtonPressed} pointerEvents={this.state.bigButtonPointerEvents}>Big Button</Text>
         <View style={{flexDirection:'row'}}>
@@ -78,8 +119,15 @@ export default class App extends Component{
             </TouchableHighlight>
           </View>
         </View>
-        <View>{/*添加不带任何属性的View组件 兼容IOS剧中显示效果 */}
-          <TextInput style={styles.textInputStyle} defaultValue='Ajfg你好'/>   
+        <View>
+          <View>{/*添加不带任何属性的View组件 兼容IOS 剧中 显示效果 */}
+            <TextInput style={styles.textInputStyle} defaultValue='Ajfg你好' ref='mRef'/>   
+          </View>
+          <AutoExpandingTextInput 
+                    defaultValue='Press to Copy something to Clipboard.'
+                    _onChange={this._onChange}
+                    _onContentSizeChange={this._onContentSizeChange}
+                    style={styles.textInputStyle}/>
         </View>
       </View>
     );
@@ -137,5 +185,13 @@ const styles = StyleSheet.create({
     alignItems:'center',
     justifyContent:'center',
     backgroundColor:'grey'
+  },
+  textInputStyle: {
+    fontSize: 20,
+    width: 300,
+    height: 30,
+    backgroundColor: 'grey',
+    paddingTop: 0,
+    paddingBottom: 0,
   }
 });
