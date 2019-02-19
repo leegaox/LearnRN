@@ -105,7 +105,7 @@ export default class DataHandler {
     }
 
     static getPreviousDiary() {
-        if (DataHandler.listIndex === null) return null;
+        if (DataHandler.listIndex === null || DataHandler.realDiaryList.length === 0) return null;
         DataHandler.listIndex--;
         let resultsLength = DataHandler.listIndex;
         let newMoodIcon;
@@ -138,7 +138,7 @@ export default class DataHandler {
     }
 
     static getNextDiary() {
-        if (DataHandler.listIndex === (DataHandler.realDiaryList.length - 1)) return null;
+        if (DataHandler.realDiaryList.length === 0 || DataHandler.listIndex === (DataHandler.realDiaryList.length - 1)) return null;
         DataHandler.listIndex++;
         let resultsLength = DataHandler.listIndex;
         let newMoodIcon;

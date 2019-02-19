@@ -38,7 +38,7 @@ export default class DiaryList extends Component {
                     <View style={MCV.secondRow}>
                         <Image style={MCV.moodStyle} source={angryMood} />
                         <View style={MCV.subViewInReader}>
-                            <TouchableOpacity onPress={this.props.selectListItem}>
+                            <TouchableOpacity onPress={this.props._selectListItem}>
                                 <Text style={MCV.textInReader}>
                                     某变量记录假日记列表标题
                                 </Text>

@@ -29,7 +29,7 @@ export default class DiaryReader extends Component{
 
                 <View style={MCV.secondRow}>
                     {/* 上层传入的属性被渲染 */}
-                    <Image style={MCV.moodStyle} source={props.diaryMood}/>
+                    <Image style={MCV.moodStyle} source={this.props.diaryMood}/>
                     <View style={MCV.subViewInReader}>
                         <Text style={MCV.textInReader}>
                             {/* 上层传入的属性被渲染 */}

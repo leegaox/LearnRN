@@ -39,7 +39,7 @@ export default class App extends Component {
 
   bindAllMyFunction() {
     this.searchKeyword =this.searchKeyword.bind(this);
-    this.selectListItem = this.selectListItem.bind(this);
+    this._selectListItem = this._selectListItem.bind(this);
     this.writeDiary = this.writeDiary.bind(this);
     this.returnPressed = this.returnPressed.bind(this);
     this.saveDiaryAndReturn = this.saveDiaryAndReturn.bind(this);
@@ -92,7 +92,7 @@ export default class App extends Component {
   }
 
   //日记列表中某条记录被选中时的处理函数
-  selectListItem() {
+  _selectListItem() {
     this.setState({ uiCode: 2 });
   }
 
@@ -100,7 +100,7 @@ export default class App extends Component {
     return (
       <DiaryList fakeListTitle={this.state.diaryTitle}
         fakeListMood={this.state.diaryMood}
-        selectListItem={this.selectListItem}
+        _selectListItem={this._selectListItem}
         searchKeyword={this.searchKeyword}
         writeDiary={this.writeDiary} />
     );
@@ -119,9 +119,9 @@ export default class App extends Component {
         diaryMood={this.state.diaryMood}
         diaryTime={this.state.diaryTime}
         diaryBody={this.state.diaryBody}
-        readingPreviousPressed={this.state.readingPreviousPressed}
-        readingNextPressed={this.state.readingNextPressed}
-        returnPressed={this.state.returnPressed} />
+        readingPreviousPressed={this.readingPreviousPressed}
+        readingNextPressed={this.readingNextPressed}
+        returnPressed={this.returnPressed} />
     );
   }
 
