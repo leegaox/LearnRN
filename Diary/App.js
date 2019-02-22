@@ -67,10 +67,16 @@ export default class App extends Component {
 
   //写日记界面保存日记并返回日记列表界面的处理函数
   saveDiaryAndReturn(newDiaryMood,newDiaryBody,newDiaryTitle) {
+    if(newDiaryBody ===null ||newDiaryTitle=== null){
+      console.log("content is null.");
+      return;
+  }
     DataHandler.saveDiary(newDiaryMood, newDiaryBody, newDiaryTitle).then(
       (result) => {
         this.setState(result);
       }
+    ).then(
+      ()=> returnPressed()
     ).catch(
       (error) => {
         console.log(error);
@@ -108,8 +114,8 @@ export default class App extends Component {
 
   showDiaryWriter() {
     return (
-      <DiaryWriter returnPressed={this.returnPressed}
-        saveDiary={this.saveDiaryAndReturn} />
+      <DiaryWriter saveDiary={this.saveDiaryAndReturn}
+        returnPressed={this.returnPressed} />
     );
   }
 

@@ -106,6 +106,10 @@ export default class DataHandler {
 
     static getPreviousDiary() {
         if (DataHandler.listIndex === null || DataHandler.realDiaryList.length === 0) return null;
+        if (DataHandler.listIndex === 0) {
+            console.log('没有更多历史日记了！');
+            return;
+        }
         DataHandler.listIndex--;
         let resultsLength = DataHandler.listIndex;
         let newMoodIcon;
@@ -125,8 +129,8 @@ export default class DataHandler {
             default:
                 newMoodIcon = peaceMood;
         }
-        let newTitle = DataHandler.realDairyList[resultsLength].title;
-        let newBody = DataHandler.realDairyList[resultsLength].body;
+        let newTitle = DataHandler.realDiaryList[resultsLength].title;
+        let newBody = DataHandler.realDiaryList[resultsLength].body;
         let ctime = new Date(DataHandler.realDiaryList[resultsLength].time);
         let timeString = '' + ctime.getFullYear() + '年' + (ctime.getMonth() + 1) + '月' + ctime.getDate() + '日 星期' + (ctime.getDay() + 1) + ' ' + ctime.getHours() + ':' + ctime.getMinutes();
         return {
@@ -138,7 +142,11 @@ export default class DataHandler {
     }
 
     static getNextDiary() {
-        if (DataHandler.realDiaryList.length === 0 || DataHandler.listIndex === (DataHandler.realDiaryList.length - 1)) return null;
+        if (DataHandler.realDiaryList.length === 0) return null;
+        if (DataHandler.listIndex === (DataHandler.realDiaryList.length - 1)) {
+            console.log('没有更多历史日记了！');
+            return;
+        }
         DataHandler.listIndex++;
         let resultsLength = DataHandler.listIndex;
         let newMoodIcon;
@@ -158,8 +166,8 @@ export default class DataHandler {
             default:
                 newMoodIcon = peaceMood;
         }
-        let newTitle = DataHandler.realDairyList[resultsLength].title;
-        let newBody = DataHandler.realDairyList[resultsLength].body;
+        let newTitle = DataHandler.realDiaryList[resultsLength].title;
+        let newBody = DataHandler.realDiaryList[resultsLength].body;
         let ctime = new Date(DataHandler.realDiaryList[resultsLength].time);
         let timeString = '' + ctime.getFullYear() + '年' + (ctime.getMonth() + 1) + '月' + ctime.getDate() + '日 星期' + (ctime.getDay() + 1) + ' ' + ctime.getHours() + ':' + ctime.getMinutes();
         return {
@@ -173,7 +181,7 @@ export default class DataHandler {
     static saveDiary(newDiaryMood, newDiaryBody, newDiaryTitle) {
         return new Promise(
             function (resolve, reject) {
-                let currentTime = new Date();
+                let ctime = new Date();
                 let timeString = '' + ctime.getFullYear() + '年' + (ctime.getMonth() + 1) + '月' + ctime.getDate() + '日 星期' + (ctime.getDay() + 1) + ' ' + ctime.getHours() + ':' + ctime.getMinutes();
                 let aDiary = Object();
                 aDiary.title = newDiaryTitle;
@@ -181,9 +189,9 @@ export default class DataHandler {
                 aDiary.mood = newDiaryMood;
                 aDiary.time = timeString;
                 //sectionID用于对日记列表进行分段显示
-                aDiary.sectionID = '' + currentTime.getFullYear() + '年' + (currentTime.getMonth() + 1) + '月';
+                aDiary.sectionID = '' + ctime.getFullYear() + '年' + (ctime.getMonth() + 1) + '月';
                 //从当前时间生成唯一值，用来索引日记列表，这个值精确到毫秒
-                aDiary.index = Date.parse(currentTime);
+                aDiary.index = Date.parse(ctime);
                 AsyncStorage.setItem('' + aDiary.index, JSON.stringify(aDiary)).then(
                     () => {//将新的日记存储在本地
                         let totalLength = DataHandler.realDiaryList.length;

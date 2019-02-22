@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StatusBar, Alert } from 'react-native';
 
 import MCV from './mcv';
+
 let angryMood = require('./image/mood2.png');
 
 export default class DiaryWriter extends Component {
@@ -14,6 +15,10 @@ export default class DiaryWriter extends Component {
         this.state = {
             moodText: '请选择心情'
         };
+        this.changeText =this.changeText.bind(this);
+        this.returnPressed= this.returnPressed.bind(this)
+        this.selectMood=this.selectMood.bind(this)
+        this._save=this._save.bind(this);
     }
 
     returnPressed() {
@@ -55,29 +60,39 @@ export default class DiaryWriter extends Component {
         });
     }
 
+    _save(){
+        console.log('_save');
+        this.props.saveDiary(this.moodCode, this.diaryBody, this.diaryTitle)
+    }
+
+    changeText(newText){
+        console.log('title:'+newText);
+        this.diaryTitle = newText ;
+    }
+
     render() {
         return (
             <View style={MCV.container}>
                 <StatusBar hidden={true} />
                 <View style={MCV.firstRow}>
-                    <TouchableOpacity onPress={this.returnPressed.bind(this)}>
+                    <TouchableOpacity onPress={this.returnPressed}>
                         <Text style={MCV.smallButton}>
                             返回
                         </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={this.selectMood.bind(this)}>
+                    <TouchableOpacity onPress={this.selectMood}>
                         <Text style={MCV.longButton}>
                             {this.state.moodText}
                         </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={this.props.saveDiary(this.moodCode, this.diaryBody, this.diaryTitle)}>
+                    <TouchableOpacity onPress={this._save}>
                         <Text style={MCV.smallButton}>
                             保存
                         </Text>
                     </TouchableOpacity>
                 </View>
-                <TextInput style={MCV.titleInputStyle} placeholder='写个日记标题吧' onChangeText={(text) => { this.diaryTitle = text }} />
-                <TextInput style={MCV.diaryBodyStyle} multiline={true} placeholder='日记正文请在此输入' onChangeText={(text) => { this.diaryBody = text }} />
+                <TextInput style={MCV.titleInputStyle} placeholder='写个日记标题吧' onChangeText={this.changeText} />
+                <TextInput style={MCV.diaryBodyStyle} multiline={true} placeholder='日记正文请在此输入' onChangeText={(text) => { console.log('content:'+text); this.diaryBody = text }} />
 
             </View>
         );
