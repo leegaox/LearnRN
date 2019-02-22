@@ -80,11 +80,14 @@ export default class DiaryWriter extends Component {
                             返回
                         </Text>
                     </TouchableOpacity>
+                    {/* onPress时bind方法”做法，会导致onPress设置的方法错乱：该控件的onPress事件变成了“保存”控件onPress事件，而“保存”控件的onPress事件失效/}
+                    {/* onPress中bind操作不是很好的方式，每次点击屏幕都会bind，最好的做法是将bind操作放到construstor中 */}
                     <TouchableOpacity onPress={this.selectMood}>
                         <Text style={MCV.longButton}>
                             {this.state.moodText}
                         </Text>
                     </TouchableOpacity>
+                    {/* 此处的props.saveDiary由于上面控件的onPress中bind操作会失效 */}
                     <TouchableOpacity onPress={this._save}>
                         <Text style={MCV.smallButton}>
                             保存
