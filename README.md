@@ -3,7 +3,7 @@
 
 ### Diary
 
-#### Q1 Why?：render函数中对中间的触摸控件的 “在点击时bind方法”做法，会导致该控件的onPress事件变成了“保存”控件onPress事件，而“保存”控件的onPress事件失效。
+#### Q1: render函数中对中间的触摸控件的 “在点击时bind方法”做法，会导致该控件的onPress事件变成了“保存”控件onPress事件，而“保存”控件的onPress事件失效。**导致组件onPress事件错乱原因未知。**
 ````javascript              
    render() {
         return (
