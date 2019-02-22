@@ -106,7 +106,7 @@ public class ExampleInterface extends ReactContextBaseJavaModule {
 
     private String getContactInfo(Cursor cursor) {
         try{
-            //D打开注释，会制造一个异常，触发reject操作
+            //打开注释，会制造一个异常，触发reject操作
 //        int makeException =2/0;
             String name = "";
             String phoneNumber = "";
