@@ -19,6 +19,7 @@ export default class App extends Component {
     super(props)
     this.state = {
       uiCode: 1,
+      _diaryList:[],
       diaryMood: null,
       diaryTime: '读取中...',
       diaryTitle: '读取中...',
@@ -27,7 +28,7 @@ export default class App extends Component {
     this.bindAllMyFunction();//执行回调函数绑定操作
     DataHandler.getAllTheDiary().then(
       (result) => {
-        this.setState(result);
+        this.setState({_diaryList:result});
       }
     ).catch(
       (error) => {
@@ -98,16 +99,20 @@ export default class App extends Component {
   }
 
   //日记列表中某条记录被选中时的处理函数
-  _selectListItem() {
-    this.setState({ uiCode: 2 });
+  _selectListItem(aIndex) {
+    let aValue =DataHandler.getDiaryAtIndex(aIndex);
+    this.setState(aValue);
+    this.setState({uiCode: 2 });
   }
 
   showDiaryList() {
     return (
       <DiaryList fakeListTitle={this.state.diaryTitle}
+        fakeListTime={this.state.diaryTime}
         fakeListMood={this.state.diaryMood}
         _selectListItem={this._selectListItem}
         searchKeyword={this.searchKeyword}
+        _diaryList ={this.state._diaryList}
         writeDiary={this.writeDiary} />
     );
   }
@@ -121,7 +126,8 @@ export default class App extends Component {
 
   showDiaryReader() {
     return (
-      <DiaryReader diaryTitle={this.state.diaryTitle}
+      <DiaryReader returnToDiaryList={this.returnPressed}
+        diaryTitle={this.state.diaryTitle}
         diaryMood={this.state.diaryMood}
         diaryTime={this.state.diaryTime}
         diaryBody={this.state.diaryBody}
