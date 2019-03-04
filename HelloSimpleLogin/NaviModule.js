@@ -11,8 +11,8 @@ import WaitingLeaf from './WaitingLeaf'     // 导入等待页面组件
 
 let SceneLogin = 'Login';
 let SceneWaiting = 'Waiting';
-export default class NaviModule extends Component {
 
+export default class NaviModule extends Component {
 
 
   constructor(props) {

@@ -11,11 +11,10 @@ export default class WaitingLeaf extends Component {
 
   constructor(props) {
     super(props);
-    
+    this.onGoBackPressed =this.onGoBackPressed.bind(this);
   }
 
   render() {
-    
     return (
       <View style={styles.container}>
         <Text style={styles.textPromptStyle}>登陆使用手机号：{this.props.phoneNumber}</Text>
@@ -31,16 +30,10 @@ export default class WaitingLeaf extends Component {
 
 }
 
-WaitingLeaf.prop={
+WaitingLeaf.PropTypes={
   phoneNumber:PropTypes.string,
   userPW:PropTypes.string 
 };
-
-WaitingLeaf.defaultProps={
-  phoneNumber:'123456',
-  userPW: '654321'
-};
-
 
 const styles = StyleSheet.create({
   container: {

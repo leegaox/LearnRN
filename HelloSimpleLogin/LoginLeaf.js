@@ -9,8 +9,12 @@ import { PermissionsAndroid,Alert, Platform, StyleSheet, Text, View, Dimensions,
 
 const { height, width } = Dimensions.get("window");
 const pixelRatio = PixelRatio.get();
-let widthOfMargin = width * 0.03;
+let widthOfMargin = width * 0.05;
 export default class LoginLeaf extends Component {
+
+  // static navigationOptions={
+  //   title:'登录',
+  // };
   /**
    * 组件构造函数，当该组件被初始化时被调用，通常在构造函数中初始化状态机变量，第一句是固定的
    * @param {*属性} props 
@@ -151,10 +155,6 @@ export default class LoginLeaf extends Component {
     this.props.onLoginPressed(this.state.inputedNum, this.state.inputedPwd);
   }
 
-  /**
-   * TODO...
-   * 跳转通讯录选择号码，后续实现
-   */
   checkPermission(permission) {
     PermissionsAndroid.check(permission).then(
       (result) => {

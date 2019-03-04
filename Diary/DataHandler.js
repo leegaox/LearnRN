@@ -44,11 +44,11 @@ export default class DataHandler {
                                             DataHandler.realDiaryList[counter] = peaceMood;
                                             break;
                                     }
-                                  
+                                    let ctime = new Date(DataHandler.realDiaryList[counter].time);
+                                    let timeString = '' + ctime.getFullYear() + '年' + (ctime.getMonth() + 1) + '月' + ctime.getDate() + '日 星期' + (ctime.getDay() + 1) + ' ' + ctime.getHours() + ':' + ctime.getMinutes();
+                                    DataHandler.realDiaryList[counter].time=timeString;
                                 } 
-                                let ctime = new Date(DataHandler.realDiaryList[counter].time);
-                                let timeString = '' + ctime.getFullYear() + '年' + (ctime.getMonth() + 1) + '月' + ctime.getDate() + '日 星期' + (ctime.getDay() + 1) + ' ' + ctime.getHours() + ':' + ctime.getMinutes();
-                                DataHandler.realDiaryList[counter].time=timeString;
+                         
                                 DataHandler.bubleSortDiaryList();//日记列表排序
                                 resolve(rVaule); //Promise机制中的成功返回
                             }
