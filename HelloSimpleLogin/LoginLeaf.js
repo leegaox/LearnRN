@@ -5,16 +5,16 @@
  */
 
 import React, { Component } from 'react';
-import { PermissionsAndroid,Alert, Platform, StyleSheet, Text, View, Dimensions, PixelRatio, TextInput } from 'react-native';
+import { PermissionsAndroid, Alert, Platform, StyleSheet, Text, View, Dimensions, PixelRatio, TextInput } from 'react-native';
 
 const { height, width } = Dimensions.get("window");
 const pixelRatio = PixelRatio.get();
 let widthOfMargin = width * 0.05;
 export default class LoginLeaf extends Component {
 
-  // static navigationOptions={
-  //   title:'登录',
-  // };
+  static navigationOptions = {
+    title: '登录',
+  };
   /**
    * 组件构造函数，当该组件被初始化时被调用，通常在构造函数中初始化状态机变量，第一句是固定的
    * @param {*属性} props 
@@ -25,7 +25,7 @@ export default class LoginLeaf extends Component {
       inputedNum: "",
       inputedPwd: ""
     };
-
+ 
     this.updatePwd = this.updatePwd.bind(this);//需要綁定后下方122行才能直接調用this.updatePwd
     this.jumpToWaiting = this.jumpToWaiting.bind(this);
   }
@@ -112,10 +112,12 @@ export default class LoginLeaf extends Component {
    * 组件渲染函数
    */
   render() {
-    //js   
+    // js   
     // console.log('逻辑像素密度：一逻辑像素等于' + pixelRatio + '实际像素单位');
     // console.log('Screen height is:' + height + ' ,Screen width is:' + width);
     // console.log('The type of aVaule is:' + typeof (aValue));
+
+    console.log(this.props.navigation.state);   //当一个RN组件通过StackNavigator加载时，他会得到一个名为navigation的属性
     console.log('this in render.');
     console.log('this');
     return (
@@ -137,22 +139,29 @@ export default class LoginLeaf extends Component {
    * 调用onLoginPressed属性，该属性是一个回调函数，它会导致在@class NaviModule 中定义的函数@method NaviModule.onLoginPressed 函数被执行，用户输入的号码与密码昨晚参数被传递。
    */
   userPressConfirm() {
-    Alert.alert(
-      '提示',
-      '确定使用' + this.state.inputedNum + '号码登陆吗?',
-      [
-        { text: '取消', onPress: () => { }, style: 'cancel' },    //按下取消键无操作；设置style：cancel  ios平台下该选项会被排列到最下方，Android平台下没用任何左右；
-        { text: '确定', onPress: this.jumpToWaiting }
-      ],
-      { cancelable: false, onDismiss: () => { console.log('alert on dismiss') } }//禁止用户通过点击屏幕上非Alert窗口区域让Alert消失这种行为;onDismiss在窗口消失时回调。
+    //打开抽屉导航页
+    this.props.navigation.openDrawer();
+    // Alert.alert(
+    //   '提示',
+    //   '确定使用' + this.state.inputedNum + '号码登陆吗?',
+    //   [
+    //     { text: '取消', onPress: () => { }, style: 'cancel' },    //按下取消键无操作；设置style：cancel  ios平台下该选项会被排列到最下方，Android平台下没用任何左右；
+    //     { text: '确定', onPress: this.jumpToWaiting }
+    //   ],
+    //   { cancelable: false, onDismiss: () => { console.log('alert on dismiss') } }//禁止用户通过点击屏幕上非Alert窗口区域让Alert消失这种行为;onDismiss在窗口消失时回调。
 
-    )
+    // )
 
   }
 
   jumpToWaiting() {
     console.log('jumpToWaiting.');
-    this.props.onLoginPressed(this.state.inputedNum, this.state.inputedPwd);
+    // this.props.onLoginPressed(this.state.inputedNum, this.state.inputedPwd);
+    this.props.navigation.navigate('Wait',  //导航跳转命令
+      {                                     //传递属性
+        phoneNumber: this.state.inputedNum,
+        userPW: this.state.inputedPwd
+      })
   }
 
   checkPermission(permission) {
@@ -173,8 +182,8 @@ export default class LoginLeaf extends Component {
             if (result === PermissionsAndroid.RESULTS.GRANTED) this.userPressAddressBook();
             else {//没有授予权限，分情况处理
               if (result === PermissionsAndroid.RESULTS.DENIED) {
-                  console.log('user denied.');
-              }else {
+                console.log('user denied.');
+              } else {
                 console.log('never ask again.');
               }
             }

@@ -8,6 +8,9 @@ import React, { Component } from 'react';
 import {  StyleSheet, Text, View} from 'react-native';
 
 export default class WaitingLeaf extends Component {
+  static navigationOptions={
+    title:'登录中',
+  };
 
   constructor(props) {
     super(props);
@@ -15,6 +18,7 @@ export default class WaitingLeaf extends Component {
   }
 
   render() {
+    const {params} =this.props.navigation.state;
     return (
       <View style={styles.container}>
         <Text style={styles.textPromptStyle}>登陆使用手机号：{this.props.phoneNumber}</Text>
@@ -25,15 +29,16 @@ export default class WaitingLeaf extends Component {
   }
 
   onGoBackPressed(){
-    this.props.onGoBackPressed();
+    // this.props.onGoBackPressed();
+    this.props.navigation.goBack();
   }
 
 }
 
-WaitingLeaf.PropTypes={
-  phoneNumber:PropTypes.string,
-  userPW:PropTypes.string 
-};
+// WaitingLeaf.PropTypes={
+//   phoneNumber:PropTypes.string,
+//   userPW:PropTypes.string 
+// };
 
 const styles = StyleSheet.create({
   container: {
